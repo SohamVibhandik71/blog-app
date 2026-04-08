@@ -9,8 +9,10 @@
 
     <ul>
         <% blogsList.forEach((blog, index) => { %>
-            <li><a href="/blog/<%=index%>" ><%= blog.title %></a></li>
+            <li><a href="/blogs/<%=index%>" ><%= blog.title %></a></li>
         <% }); %>
     </ul>
+    <br>
+    <a href="/blogs/new">New Blog</a>
 </body>
 </html>
