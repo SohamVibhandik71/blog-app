@@ -16,6 +16,9 @@ const blog1 = {
 
 const blogs = [blog0, blog1]
 
+app.get("/blogs/delete", (req,res)=>{
+    
+});
 app.get("/blogs/new",(req,res)=>{
     res.render("new.ejs");
 });
@@ -25,8 +28,19 @@ app.get("/",(req,res)=>{
 });
  
 app.get("/blogs/:id",(req,res)=>{
-    res.render("show.ejs",{currBlog : blogs[req.params.id]});
+    res.render("show.ejs",{
+        currBlog : blogs[req.params.id],
+        id : req.params.id
+    });
 })
+
+app.post("/blogs/:id/delete",(req,res)=>{
+    
+    let index = parseInt(req.params.id);
+    blogs.splice(index,1);
+    res.redirect("/");
+
+});
 
 
 app.post("/blogs",(req,res)=>{

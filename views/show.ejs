@@ -7,6 +7,9 @@
 </head>
 <body>
     <h1><%= currBlog.title %></h1>
-    <p><%= currBlog.content %></p>
+    <p><%= currBlog.content %></p><br><br><br><hr>
+    <form action="/blogs/<%=id%>/delete" method="post">
+        <button type="submit">Delete</button>
+    </form>
 </body>
 </html>

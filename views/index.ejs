@@ -6,10 +6,9 @@
     <title>Home</title>
 </head>
 <body>
-
     <ul>
         <% blogsList.forEach((blog, index) => { %>
-            <li><a href="/blogs/<%=index%>" ><%= blog.title %></a></li>
+            <li><a href="/blogs/<%=index%>" ><%= blog.title %></a></li> 
         <% }); %>
     </ul>
     <br>
