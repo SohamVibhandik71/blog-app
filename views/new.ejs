@@ -7,11 +7,13 @@
 </head>
 <body>
     <form action="/blogs" method="POST">
-        <label for="title">Title</label><br>
-        <input type="text" name="title" ><br><br>
-        <label for="content">Blog content</label><br>
-        <input type="text" name="content"><br><br>
-        <input type="submit" >
+        <label>Title:</label><br>
+        <input type="text" name="title" required>
+        <br><br>
+
+        <label>Content:</label><br>
+        <textarea name="content" rows="5" cols="30" required></textarea>
+        <br><br>
     </form>
 </body>
 </html>

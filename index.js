@@ -26,13 +26,33 @@ app.get("/blogs/new",(req,res)=>{
 app.get("/",(req,res)=>{
     res.render("index.ejs",{blogsList : blogs});
 });
- 
+
+app.get("/blogs/:id/edit",(req,res)=>{
+    res.render("edit.ejs",{
+        currBlog : blogs[req.params.id],
+        id : req.params.id
+    })
+});
+
 app.get("/blogs/:id",(req,res)=>{
     res.render("show.ejs",{
         currBlog : blogs[req.params.id],
         id : req.params.id
     });
 })
+
+app.post("/blogs/:id/edit",(req,res)=>{
+    const id = parseInt(req.params.id);
+    const updatedBlog = {
+        title : req.body["title"],
+        content : req.body["content"]
+    };
+
+    blogs[id] = updatedBlog;
+
+    res.redirect(`/blogs/${id}`);
+
+});
 
 app.post("/blogs/:id/delete",(req,res)=>{
     
