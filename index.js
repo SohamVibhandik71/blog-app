@@ -3,24 +3,48 @@ const app = express();
 const port = 3000;
 
 app.use(express.urlencoded({extended : true})); // middleware to access data from req
+app.use(express.static("public"));
 
 const blog0 = {
     title : "AI",
-    content : "AI can never replace humans!"
+    content : "AI can never replace humans!",
+    user_id : 0
 }
 
 const blog1 = {
     title : "Global Warming!",
-    content : "global warming is a major concern which really need Attention."
+    content : "global warming is a major concern which really need Attention.",
+    user_id : 1
 }
+
+const user0 = {
+    id: 0, 
+    name: "Soham"
+}
+
+const user1 = {
+    id: 1, 
+    name: "Uddhav"
+}
+
+const user2 = {
+    id: 2, 
+    name: "Aditya"
+}
+
+const user3 = {
+    id: 3, 
+    name: "Gaurish"
+}
+
+const users = [user0,user1,user2,user3]
 
 const blogs = [blog0, blog1]
 
-app.get("/blogs/delete", (req,res)=>{
-    
-});
 app.get("/blogs/new",(req,res)=>{
-    res.render("new.ejs");
+    res.render("new.ejs",{
+        users : users
+    });
 });
 
 app.get("/",(req,res)=>{
@@ -37,7 +61,8 @@ app.get("/blogs/:id/edit",(req,res)=>{
 app.get("/blogs/:id",(req,res)=>{
     res.render("show.ejs",{
         currBlog : blogs[req.params.id],
-        id : req.params.id
+        id : req.params.id,
+        users : users
     });
 })
 
@@ -54,6 +79,7 @@ app.post("/blogs/:id/edit",(req,res)=>{
 
 });
 
+
 app.post("/blogs/:id/delete",(req,res)=>{
     
     let index = parseInt(req.params.id);
@@ -62,11 +88,11 @@ app.post("/blogs/:id/delete",(req,res)=>{
 
 });
 
-
 app.post("/blogs",(req,res)=>{
     const newBlog = {
         title : req.body["title"],
-        content : req.body["content"]
+        content : req.body["content"],
+        user_id : parseInt(req.body["user_id"])
     }
 
     blogs.push(newBlog);

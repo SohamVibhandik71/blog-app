@@ -7,10 +7,20 @@
 </head>
 <body>
     <h1><%= currBlog.title %></h1>
+    <%=console.log(currBlog);%>
+    <% const uid = currBlog.user_id %>
+
+    <% users.forEach(user => { %>
+    <% if (user.id == uid) { %>
+        <h3>By <%= user.name %></h3>
+     <%}%>
+    <%}) %>
+
     <p><%= currBlog.content %></p><br><br><br><hr>
     <form action="/blogs/<%=id%>/delete" method="post">
         <button type="submit">Delete</button>
     </form>
+    <br>
     <form action="/blogs/<%=id%>/edit" method="get">
         <button type="submit">Edit</button>
     </form>
