@@ -3,6 +3,7 @@ const app = express();
 const port = 3000;
 
 app.use(express.urlencoded({extended : true})); // middleware to access data from req
+
 app.use(express.static("public"));
 
 const blog0 = {
@@ -41,6 +42,23 @@ const users = [user0,user1,user2,user3]
 
 const blogs = [blog0, blog1]
 
+const comments = []
+
+app.post("/blogs/:id/comments", (req, res) => {
+    const blogId = parseInt(req.params.id);
+    const userId = parseInt(req.body.user_id);
+    const content = req.body.content;
+
+    const newComment = {
+        blog_id: blogId,
+        user_id: userId,
+        content: content
+    };
+
+    comments.push(newComment);
+
+    res.redirect(`/blogs/${blogId}`);
+});
 app.get("/blogs/new",(req,res)=>{
     res.render("new.ejs",{
         users : users
@@ -62,7 +80,8 @@ app.get("/blogs/:id",(req,res)=>{
     res.render("show.ejs",{
         currBlog : blogs[req.params.id],
         id : req.params.id,
-        users : users
+        users : users,
+        comments : comments
     });
 })
 

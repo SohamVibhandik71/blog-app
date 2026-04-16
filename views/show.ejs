@@ -7,22 +7,60 @@
 </head>
 <body>
     <h1><%= currBlog.title %></h1>
-    <%=console.log(currBlog);%>
-    <% const uid = currBlog.user_id %>
+
 
     <% users.forEach(user => { %>
-    <% if (user.id == uid) { %>
+    <% if (user.id == currBlog.user_id) { %>
         <h3>By <%= user.name %></h3>
      <%}%>
     <%}) %>
 
     <p><%= currBlog.content %></p><br><br><br><hr>
+
+    <h4>Comments :</h4>
+
+    <% comments.forEach((comment) => { %>
+        <% if (comment.blog_id == id) { %>
+
+            <% users.forEach(user => { %>
+                <% if (user.id == comment.user_id) { %>
+                    <p><%= user.name %> : <%= comment.content %></p>
+                <% } %>
+            <% }) %>
+        <% } %>
+    <% }) %>
+
+    <hr>
+    
+    
     <form action="/blogs/<%=id%>/delete" method="post">
         <button type="submit">Delete</button>
     </form>
     <br>
+
+
     <form action="/blogs/<%=id%>/edit" method="get">
         <button type="submit">Edit</button>
     </form>
-</body>
+
+    <form action="/blogs/<%= id %>/comments" method="POST">
+
+        <label>Content:</label><br>
+        <textarea name="content" rows="5" cols="30" required></textarea>
+        <br><br>
+
+        <label>Select User:</label><br>
+        <select name="user_id" required>
+            <% users.forEach(user => { %>
+                <option value="<%= user.id %>">
+                    <%= user.name %>
+                </option>
+            <% }) %>
+        </select>
+
+        <br><br>
+        <button type="submit">Add Comment</button>
+    </form>
+
+</body> 
 </html>
