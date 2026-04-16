@@ -1,4 +1,5 @@
 import express from "express";
+import mysql from "mysql2";
 const app = express();
 const port = 3000;
 
@@ -59,6 +60,7 @@ app.post("/blogs/:id/comments", (req, res) => {
 
     res.redirect(`/blogs/${blogId}`);
 });
+
 app.get("/blogs/new",(req,res)=>{
     res.render("new.ejs",{
         users : users
@@ -66,7 +68,13 @@ app.get("/blogs/new",(req,res)=>{
 });
 
 app.get("/",(req,res)=>{
-    res.render("index.ejs",{blogsList : blogs});
+    db.query("SELECT * FROM blogs",(err,results)=>{
+        if(err){
+            console.log(err);
+        }else{
+            res.render("index.ejs",{blogsList : results});
+        }
+    });
 });
 
 app.get("/blogs/:id/edit",(req,res)=>{
@@ -76,14 +84,29 @@ app.get("/blogs/:id/edit",(req,res)=>{
     })
 });
 
-app.get("/blogs/:id",(req,res)=>{
-    res.render("show.ejs",{
-        currBlog : blogs[req.params.id],
-        id : req.params.id,
-        users : users,
-        comments : comments
-    });
-})
+app.get("/blogs/:id", (req, res) => {
+    const blogId = req.params.id;
+
+    db.query(
+        `SELECT blogs.*, users.name AS author
+         FROM blogs
+         JOIN users ON blogs.user_id = users.id
+         WHERE blogs.id = ?`,
+        [blogId],
+        (err, results) => {
+            if (err) {
+                console.log(err);
+                return res.send("Error");
+            }
+
+            const blog = results[0];
+
+            res.render("show.ejs", {
+                currBlog: blog
+            });
+        }
+    );
+});
 
 app.post("/blogs/:id/edit",(req,res)=>{
     const id = parseInt(req.params.id);
@@ -123,3 +146,20 @@ app.listen(port,()=>{
 });
 
 
+//Database
+
+const db = mysql.createConnection({
+    host : "localhost",
+    user : "root",
+    password : "soham",
+    database : "blog_app"
+});
+
+
+db.connect((err)=>{
+    if(err){
+        console.log("DB connection failed", err);
+    }else{
+        console.log("Connected to MySQL");
+    }
+});

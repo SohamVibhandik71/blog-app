@@ -8,17 +8,13 @@
 <body>
     <h1><%= currBlog.title %></h1>
 
-
-    <% users.forEach(user => { %>
-    <% if (user.id == currBlog.user_id) { %>
-        <h3>By <%= user.name %></h3>
-     <%}%>
-    <%}) %>
+    <h3>By <%= currBlog.author %></h3>
 
     <p><%= currBlog.content %></p><br><br><br><hr>
 
-    <h4>Comments :</h4>
 
+    <h4>Comments :</h4>
+1
     <% comments.forEach((comment) => { %>
         <% if (comment.blog_id == id) { %>
 
@@ -61,6 +57,5 @@
         <br><br>
         <button type="submit">Add Comment</button>
     </form>
-
 </body> 
 </html>
