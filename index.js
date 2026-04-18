@@ -7,65 +7,59 @@ app.use(express.urlencoded({extended : true})); // middleware to access data fro
 
 app.use(express.static("public"));
 
-const blog0 = {
-    title : "AI",
-    content : "AI can never replace humans!",
-    user_id : 0
-}
 
-const blog1 = {
-    title : "Global Warming!",
-    content : "global warming is a major concern which really need Attention.",
-    user_id : 1
-}
+app.post("/user", (req,res)=>{
+     
+    const newUser = {
+        name : req.body.name
+    }
 
-const user0 = {
-    id: 0, 
-    name: "Soham"
-}
-
-const user1 = {
-    id: 1, 
-    name: "Uddhav"
-}
-
-const user2 = {
-    id: 2, 
-    name: "Aditya"
-}
-
-const user3 = {
-    id: 3, 
-    name: "Gaurish"
-}
-
-const users = [user0,user1,user2,user3]
-
-const blogs = [blog0, blog1]
-
-const comments = []
+    db.query(
+        "INSERT INTO users (name) VALUES (?)",
+        [newUser.name],
+        (err,result) =>{
+            if(err){
+                console.log(err);
+                return res.send("Error while adding new user");
+            }
+            res.redirect("/")
+        }
+    );
+});
 
 app.post("/blogs/:id/comments", (req, res) => {
     const blogId = parseInt(req.params.id);
     const userId = parseInt(req.body.user_id);
     const content = req.body.content;
 
-    const newComment = {
-        blog_id: blogId,
-        user_id: userId,
-        content: content
-    };
+    db.query(
+        "INSERT INTO comments (blog_id, user_id, content) VALUES (?, ?, ?)",
+        [blogId, userId, content],
+        (err,result) => {
+            if(err){
+                console.log(err);
+                return res.send("Error adding comment");
+            }
 
-    comments.push(newComment);
-
-    res.redirect(`/blogs/${blogId}`);
+            res.redirect(`/blogs/${blogId}`);
+        }
+    );
 });
 
-app.get("/blogs/new",(req,res)=>{
-    res.render("new.ejs",{
-        users : users
+
+app.get("/blogs/new", (req, res) => {
+    db.query("SELECT * FROM users", (err, results) => {
+        if (err) {
+            console.log(err);
+            return res.send("Error fetching users");
+        }
+
+        res.render("new.ejs", {
+            users: results
+        });
     });
 });
+
 
 app.get("/",(req,res)=>{
     db.query("SELECT * FROM blogs",(err,results)=>{
@@ -101,23 +95,43 @@ app.get("/blogs/:id/edit",(req,res)=>{
 app.get("/blogs/:id", (req, res) => {
     const blogId = req.params.id;
 
+    // Blog + Author
     db.query(
         `SELECT blogs.*, users.name AS author
          FROM blogs
          JOIN users ON blogs.user_id = users.id
          WHERE blogs.id = ?`,
         [blogId],
-        (err, results) => {
+        (err, blogResult) => {
             if (err) {
                 console.log(err);
                 return res.send("Error");
             }
 
-            const blog = results[0];
+            const blog = blogResult[0];
 
-            res.render("show.ejs", {
-                currBlog: blog
-            });
+            //comments + users
+            db.query(
+                `SELECT comments.*, users.name AS author
+                 FROM comments
+                 JOIN users ON comments.user_id = users.id
+                 WHERE comments.blog_id = ?`,
+                [blogId],
+                (err, commentResult) => {
+                    db.query("SELECT * FROM users", (err, userResults) => {
+                        if (err) {
+                            console.log(err);
+                            return res.send("Error fetching users");
+                        }
+
+                        res.render("show.ejs", {
+                            currBlog: blog,
+                            comments: commentResult,
+                            users: userResults
+                        });
+                    });
+                }
+            );
         }
     );
 });

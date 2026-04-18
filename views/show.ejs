@@ -3,45 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%=currBlog.title%></title>
+    <title>Blog</title>
 </head>
 <body>
+
     <h1><%= currBlog.title %></h1>
-
     <h3>By <%= currBlog.author %></h3>
+    <p><%= currBlog.content %></p>
 
-    <p><%= currBlog.content %></p><br><br><br><hr>
+    <hr>
 
-<h4>Comments :</h4>
-1
-    <% comments.forEach((comment) => { %>
-        <% if (comment.blog_id == id) { %>
+    <h4>Comments:</h4>
 
-            <% users.forEach(user => { %>
-                <% if (user.id == comment.user_id) { %>
-                    <p><%= user.name %> : <%= comment.content %></p>
-                <% } %>
-            <% }) %>
-        <% } %>
+    <% if (comments.length === 0) { %>
+        <p>No comments yet</p>
+    <% } %>
+
+    <% comments.forEach(comment => { %>
+        <p><%= comment.author %> : <%= comment.content %></p>
     <% }) %>
 
     <hr>
-    
-    
-    <form action="/blogs/<%=id%>/delete" method="post">
+
+    <!-- Delete Blog -->
+    <form action="/blogs/<%= currBlog.id %>/delete" method="POST">
         <button type="submit">Delete</button>
     </form>
+
     <br>
 
-
-    <form action="/blogs/<%=id%>/edit" method="get">
+    <!-- Edit Blog -->
+    <form action="/blogs/<%= currBlog.id %>/edit" method="GET">
         <button type="submit">Edit</button>
     </form>
 
-    <form action="/blogs/<%= id %>/comments" method="POST">
+    <hr>
+
+    <!-- Add Comment -->
+    <h4>Add Comment:</h4>
+
+    <form action="/blogs/<%= currBlog.id %>/comments" method="POST">
 
         <label>Content:</label><br>
-        <textarea name="content" rows="5" cols="30" required></textarea>
+        <textarea name="content" rows="4" cols="30" required></textarea>
         <br><br>
 
         <label>Select User:</label><br>
@@ -56,6 +60,6 @@
         <br><br>
         <button type="submit">Add Comment</button>
     </form>
-    
-</body> 
+
+</body>
 </html>
