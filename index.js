@@ -136,9 +136,18 @@ app.post("/blogs",(req,res)=>{
         content : req.body["content"],
         user_id : parseInt(req.body["user_id"])
     }
+    db.query(
+        "INSERT INTO blogs (title, content, user_id ) VALUES (?, ?, ?)",
+        [newBlog.title, newBlog.content, parseInt(newBlog.user_id)],
+        (err,result) =>{
+            if(err){
+                console.log(err);
+                return res.send("Error inserting Blog");
+            }
 
-    blogs.push(newBlog);
-    res.redirect("/");
+            res.redirect("/")
+        }
+    )
 });
 
 app.listen(port,()=>{

@@ -11,7 +11,7 @@
 
     <ul>
         <% blogsList.forEach((blog, index) => { %>
-            <li><a href="/blogs/<%=index%>" ><%= blog.title %></a></li> 
+            <li><a href="/blogs/<%=blog.id%>" ><%= blog.title %></a></li> 
         <% }); %>
     </ul>
     <br>

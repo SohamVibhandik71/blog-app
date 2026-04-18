@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>blog <%=currBlog%></title>
+    <title><%=currBlog.title%></title>
 </head>
 <body>
     <h1><%= currBlog.title %></h1>
@@ -12,8 +12,7 @@
 
     <p><%= currBlog.content %></p><br><br><br><hr>
 
-
-    <h4>Comments :</h4>
+<h4>Comments :</h4>
 1
     <% comments.forEach((comment) => { %>
         <% if (comment.blog_id == id) { %>
@@ -57,5 +56,6 @@
         <br><br>
         <button type="submit">Add Comment</button>
     </form>
+    
 </body> 
 </html>
