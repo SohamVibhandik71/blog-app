@@ -78,10 +78,24 @@ app.get("/",(req,res)=>{
 });
 
 app.get("/blogs/:id/edit",(req,res)=>{
-    res.render("edit.ejs",{
-        currBlog : blogs[req.params.id],
-        id : req.params.id
-    })
+    const blogId = req.params.id;
+
+    db.query(
+        "SELECT * FROM blogs WHERE id = ?",
+        [blogId],
+        (err,result)=>{
+            if(err){
+                console.log(err);
+                return res.send("Error");
+            }
+            const blog = result[0];
+            res.render("edit.ejs",{
+                currBlog: blog,
+                id: blogId
+            })
+        }
+    );
+
 });
 
 app.get("/blogs/:id", (req, res) => {
@@ -109,25 +123,41 @@ app.get("/blogs/:id", (req, res) => {
 });
 
 app.post("/blogs/:id/edit",(req,res)=>{
-    const id = parseInt(req.params.id);
+    const blogId = req.params.id;
     const updatedBlog = {
-        title : req.body["title"],
-        content : req.body["content"]
-    };
+        title : req.body.title,
+        content : req.body.content
+    }
 
-    blogs[id] = updatedBlog;
-
-    res.redirect(`/blogs/${id}`);
-
+    db.query(
+        "UPDATE blogs SET title = ?, content = ? WHERE id = ?",
+        [updatedBlog.title, updatedBlog.content, blogId],
+        (err,result) =>{
+            if(err){
+                console.log(err);
+                return res.send("Error updating blog");
+            }
+            res.redirect(`/blogs/${blogId}`);
+        }
+    );
 });
 
 
 app.post("/blogs/:id/delete",(req,res)=>{
-    
-    let index = parseInt(req.params.id);
-    blogs.splice(index,1);
-    res.redirect("/");
+    const blogId = req.params.id;
 
+    db.query(
+        "DELETE FROM blogs WHERE id = ?",
+        [blogId],
+        (err,result) => {
+            if(err){
+                console.log(err);
+                return res.send("Error deleting blog");
+            }
+
+            res.redirect("/");
+        }
+    );
 });
 
 app.post("/blogs",(req,res)=>{
