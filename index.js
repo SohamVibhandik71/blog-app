@@ -157,19 +157,34 @@ app.post("/blogs/:id/edit",(req,res)=>{
 });
 
 
-app.post("/blogs/:id/delete",(req,res)=>{
+app.post("/blogs/:id/delete", (req, res) => {
     const blogId = req.params.id;
 
+    // delete comments first(because mySQL dont allow delete blog becoz, Blog (parent row) is being used in comments (child rows))
+
+    //delete comments first
     db.query(
-        "DELETE FROM blogs WHERE id = ?",
+        "DELETE FROM comments WHERE blog_id = ?",
         [blogId],
-        (err,result) => {
-            if(err){
+        (err) => {
+            if (err) {
                 console.log(err);
-                return res.send("Error deleting blog");
+                return res.send("Error deleting comments");
             }
 
-            res.redirect("/");
+            //  delete blog
+            db.query(
+                "DELETE FROM blogs WHERE id = ?",
+                [blogId],
+                (err) => {
+                    if (err) {
+                        console.log(err);
+                        return res.send("Error deleting blog");
+                    }
+
+                    res.redirect("/");
+                }
+            );
         }
     );
 });

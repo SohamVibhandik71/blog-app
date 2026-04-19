@@ -3,52 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Libre+Baskerville:wght@400;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <title>Blog</title>
 </head>
-<body>
+<body class="detail-page">
+    <main class="page-shell article-shell">
 
-    <h1><%= currBlog.title %></h1>
-    <h3>By <%= currBlog.author %></h3>
-    <p><%= currBlog.content %></p>
+    <article class="post">
+        <p class="eyebrow">Published note</p>
+        <h1><%= currBlog.title %></h1>
+        <h3>By <%= currBlog.author %></h3>
+        <p><%= currBlog.content %></p>
+    </article>
 
     <hr>
 
-    <h4>Comments:</h4>
+    <section class="comments">
+    <h4>Comments</h4>
 
     <% if (comments.length === 0) { %>
-        <p>No comments yet</p>
+        <p class="muted">No comments yet</p>
     <% } %>
 
     <% comments.forEach(comment => { %>
-        <p><%= comment.author %> : <%= comment.content %></p>
+        <p class="comment"><strong><%= comment.author %></strong><span><%= comment.content %></span></p>
     <% }) %>
+    </section>
 
     <hr>
 
+    <div class="action-row">
     <!-- Delete Blog -->
     <form action="/blogs/<%= currBlog.id %>/delete" method="POST">
-        <button type="submit">Delete</button>
+        <button class="danger" type="submit">Delete</button>
     </form>
-
-    <br>
 
     <!-- Edit Blog -->
     <form action="/blogs/<%= currBlog.id %>/edit" method="GET">
-        <button type="submit">Edit</button>
+        <button class="secondary" type="submit">Edit</button>
     </form>
+    </div>
 
     <hr>
 
     <!-- Add Comment -->
-    <h4>Add Comment:</h4>
+    <section class="form-panel">
+    <h4>Add Comment</h4>
 
-    <form action="/blogs/<%= currBlog.id %>/comments" method="POST">
+    <form action="/blogs/<%= currBlog.id %>/comments" method="POST" class="stacked-form">
 
-        <label>Content:</label><br>
+        <label>Content:</label>
         <textarea name="content" rows="4" cols="30" required></textarea>
-        <br><br>
 
-        <label>Select User:</label><br>
+        <label>Select User:</label>
         <select name="user_id" required>
             <% users.forEach(user => { %>
                 <option value="<%= user.id %>">
@@ -57,9 +67,10 @@
             <% }) %>
         </select>
 
-        <br><br>
         <button type="submit">Add Comment</button>
     </form>
+    </section>
+    </main>
 
 </body>
 </html>
