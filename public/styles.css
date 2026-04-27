@@ -145,6 +145,7 @@ hr {
 }
 
 .blog-card {
+    background-image: url("ai.jepg");
     min-height: 132px;
     border: 1px solid var(--line);
     border-radius: 8px;
